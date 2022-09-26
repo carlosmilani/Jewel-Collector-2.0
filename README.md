@@ -1,1 +1,1 @@
-# Jewel-Collector-2.0
+# Trabalho de INF-0990.
