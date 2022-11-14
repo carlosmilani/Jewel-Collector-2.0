@@ -1,46 +1,95 @@
+/// <summary>
+/// Essa classe representa o mapa onde ocorre o jogo.
+/// </summary>
 public class Map
 {
-    public int size {get; private set;}
-    public int level {get; private set;}
+    /// <summary>
+    /// Esse membro representa a dimensão do mapa.
+    /// </summary>
+    /// <value></value>
+    public int size { get; private set; }
+
+    /// <summary>
+    /// Esse membro representa a fase atual do jogo.
+    /// </summary>
+    /// <value></value>
+    public int level { get; private set; }
+
+    /// <summary>
+    /// Esse membro representa uma lista de joias que estão no mapa.
+    /// </summary>
+    /// <typeparam name="Jewel"></typeparam>
+    /// <returns></returns>
     public List<Jewel> collection = new List<Jewel>();
+
+    /// <summary>
+    /// Esse membro guarda se a fase foi concluída.
+    /// </summary>
     public bool level_cleared = false;
+
+    /// <summary>
+    /// Esse membro é uma matriz bi-dimensional que representa um mapa.
+    /// </summary>
     public Objeto[,] Matriz;
 
-    public Map(int size, int level) {
+    /// <summary>
+    /// Construtor da classe Map.
+    /// </summary>
+    /// <param name="size">Tamanho do mapa</param>
+    /// <param name="level">Fase atual</param>
+    public Map(int size, int level)
+    {
         this.size = size;
         this.level = level;
 
-        Matriz = new Objeto[size,size];
-        for (int i = 0; i < Matriz.GetLength(0); i++) {
+        Matriz = new Objeto[size, size];
+        for (int i = 0; i < Matriz.GetLength(0); i++)
+        {
             for (int j = 0; j < Matriz.GetLength(1); j++)
-                Matriz[i,j] = new Vazio(i,j);
+                Matriz[i, j] = new Vazio(i, j);
         }
 
         if (level == 1)
             First_Map();
-        else 
+        else
             Random_Map();
     }
 
-    public void Insere_objeto(Objeto objeto) {
-        if (objeto is Jewel) {
+    /// <summary>
+    /// Esse método insere um novo objeto no mapa.
+    /// </summary>
+    /// <param name="objeto"></param>
+    public void Insere_objeto(Objeto objeto)
+    {
+        if (objeto is Jewel)
+        {
             collection.Add((Jewel)objeto);
         }
         Matriz[objeto.pos_x, objeto.pos_y] = objeto;
     }
 
-    public void Print() {
+    /// <summary>
+    /// Esse método imprime cada uma das posições do mapa.
+    /// </summary>
+    public void Print()
+    {
         Console.WriteLine($"Level: {this.level}");
-        for (int i = 0; i < Matriz.GetLength(0); i++) {
-            for (int j = 0; j < Matriz.GetLength(1); j++) {
-                Console.Write(Matriz[i,j]);
+        for (int i = 0; i < Matriz.GetLength(0); i++)
+        {
+            for (int j = 0; j < Matriz.GetLength(1); j++)
+            {
+                Console.Write(Matriz[i, j]);
                 Console.Write(" ");
             }
             Console.WriteLine();
         }
     }
 
-    public void First_Map() {
+    /// <summary>
+    /// Esse método insere todos os elementos de forma pré-definida na primeira fase do jogo.
+    /// </summary>
+    public void First_Map()
+    {
         this.Insere_objeto(new RedJewel(1, 9));
         this.Insere_objeto(new RedJewel(8, 8));
         this.Insere_objeto(new GreenJewel(9, 1));
@@ -62,7 +111,11 @@ public class Map
         this.Insere_objeto(new Tree(1, 4));
     }
 
-    public void Random_Map() {
+    /// <summary>
+    /// Esse método gera um novo mapa com elementos distribuídos aleatoriamente, a partir da segunda fase do jogo.
+    /// </summary>
+    public void Random_Map()
+    {
         Random r = new Random(1);
         int xRandom, yRandom;
         decimal qtd_jewel, qtd_tree, qtd_water;
@@ -72,55 +125,62 @@ public class Map
         qtd_water = 7 * proportion;
         qtd_jewel = (int)Math.Round(qtd_jewel);
         qtd_water = (int)Math.Round(qtd_water);
-        qtd_tree = (int)Math.Round (qtd_tree);
+        qtd_tree = (int)Math.Round(qtd_tree);
 
-        for(int i = 0; i <= qtd_jewel; i++) {
+        for (int i = 0; i <= qtd_jewel; i++)
+        {
             xRandom = r.Next(0, size);
             yRandom = r.Next(0, size);
             if (Matriz[xRandom, yRandom] is Vazio && xRandom + yRandom != 0)
                 this.Insere_objeto(new BlueJewel(xRandom, yRandom));
-            else {i--;}
+            else { i--; }
         }
 
-        for(int i = 0; i <= qtd_jewel; i++) {
+        for (int i = 0; i <= qtd_jewel; i++)
+        {
             xRandom = r.Next(0, size);
             yRandom = r.Next(0, size);
             if (Matriz[xRandom, yRandom] is Vazio && xRandom + yRandom != 0)
                 this.Insere_objeto(new GreenJewel(xRandom, yRandom));
-            else {i--;}
+            else { i--; }
         }
 
-        for(int i = 0; i <= qtd_jewel; i++) {
+        for (int i = 0; i <= qtd_jewel; i++)
+        {
             xRandom = r.Next(0, size);
             yRandom = r.Next(0, size);
             if (Matriz[xRandom, yRandom] is Vazio && xRandom + yRandom != 0)
                 this.Insere_objeto(new RedJewel(xRandom, yRandom));
-            else {i--;}
+            else { i--; }
         }
 
-        for(int i = 0; i <= qtd_water; i++) {
+        for (int i = 0; i <= qtd_water; i++)
+        {
             xRandom = r.Next(0, size);
             yRandom = r.Next(0, size);
             if (Matriz[xRandom, yRandom] is Vazio && xRandom + yRandom != 0)
                 this.Insere_objeto(new Water(xRandom, yRandom));
-            else {i--;}
+            else { i--; }
         }
 
-        for(int i = 0; i <= qtd_tree; i++) {
+        for (int i = 0; i <= qtd_tree; i++)
+        {
             xRandom = r.Next(0, size);
             yRandom = r.Next(0, size);
             if (Matriz[xRandom, yRandom] is Vazio && xRandom + yRandom != 0)
                 this.Insere_objeto(new Tree(xRandom, yRandom));
-            else {i--;}
+            else { i--; }
         }
         bool radioactive = false;
-        do {
+        do
+        {
             xRandom = r.Next(0, size);
             yRandom = r.Next(0, size);
-            if (Matriz[xRandom, yRandom] is Vazio && xRandom + yRandom != 0) {
+            if (Matriz[xRandom, yRandom] is Vazio && xRandom + yRandom != 0)
+            {
                 this.Insere_objeto(new Radioactive(xRandom, yRandom));
                 radioactive = true;
             }
-        } while(!radioactive);
+        } while (!radioactive);
     }
 }
